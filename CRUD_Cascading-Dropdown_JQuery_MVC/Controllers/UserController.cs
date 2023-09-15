@@ -25,6 +25,26 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
             return View();
         }
 
+        public ActionResult ListOfCustomer() 
+        { 
+            return View();
+        }
+
+        public JsonResult FetchListOfCustomers()
+        {
+            string sqlQuery = "SELECT * FROM tblCustomer JOIN tblCountry ON Country = CountryID JOIN tblState ON [State] = StateID JOIN tblCity ON City = CityID";
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+                connection.Open();
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                _ = adapter.Fill(dataTable);
+            }
+            string data = JsonConvert.SerializeObject(dataTable);
+            return Json(data,JsonRequestBehavior.AllowGet);
+        }
+
         public void UserInsert(UserModel userModel)
         {
             string sqlQuery = "INSERT INTO tblCustomer VALUES (@name,@email,@country,@state,@city)";

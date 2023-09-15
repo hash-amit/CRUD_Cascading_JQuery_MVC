@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "ListOfCustomer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    @Html.ActionLink("Add New Customer", "UserForm", "User")
+</div>
+
+<table id="ShowTable">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Country</th>
+        <th>State</th>
+        <th>City</th>
+    </tr>
+</table>
+
+<style>
+    /* styles.css */
+    #ShowTable {
+        border: 1px solid black;
+        width: 100%;
+    }
+
+        #ShowTable th {
+            background-color: darkslategray;
+            color: white;
+        }
+
+        #ShowTable th, #ShowTable td {
+            text-align: center;
+            border: 1px solid black;
+            /*padding: 8px;*/ /* Optional: Add padding to table cells for better spacing */
+        }
+</style>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        GetCustomersList();
+        console.log("called")
+    });
+
+    function GetCustomersList() {
+        $.ajax({
+            url: 'FetchListOfCustomers',
+            type: 'Post',
+            data: {},
+            success: function (data) {
+                data = JSON.parse(data);
+                $("#ShowTable").find("tr:gt(0)").remove();
+                for (var i = 0; i < data.length; i++) {
+                    $("#ShowTable").append(`
+                        <tr>
+                          <td>${data[i].Name}</td>
+                          <td>${data[i].Email}</td>
+                          <td>${data[i].CountryName}</td>
+                          <td>${data[i].StateName}</td>
+                          <td>${data[i].CityName}</td>
+                        </tr>
+                    `); // Used template literals ( ${} -> Template literal ) for string concatenation
+                }
+            },
+            error: function () {
+                alert("Data not found!");
+            }
+        });
+    }
+</script>
+
