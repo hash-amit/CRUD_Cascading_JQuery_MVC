@@ -1,0 +1,152 @@
+﻿@model CRUD_Cascading_Dropdown_JQuery_MVC.Models.UserModel
+
+@{
+    ViewBag.Title = "UserForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add Customer</h2>
+<table>
+    <tr>
+        <td>Name: </td>
+        <td><input id="Name_txt" type="text" /></td>
+    </tr>
+
+    <tr>
+        <td>Email: </td>
+        <td><input id="Email_txt" type="text" /></td>
+    </tr>
+
+    <tr>
+        <td>Country: </td>
+        <td>
+            <select id="Country_ddl" onchange="GETSTATE(this.value)">
+                <option value="0">Choose Country</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td>State: </td>
+        <td>
+            <select id="State_ddl" onchange="GETCITY(this.value)">
+                <option value="0">Choose State</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td>City: </td>
+        <td>
+            <select id="City_ddl">
+                <option value="0">Choose City</option>
+            </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td><input id="Save_btn" type="button" value="Save" onclick="SAVE()" /></td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        GETCOUNTRY();
+        // Disable the State dropdown on page load
+        $("#State_ddl").prop('disabled', true);
+        // Disable the City dropdown on page load
+        $("#City_ddl").prop('disabled', true);
+    });
+
+    function GETCOUNTRY() {
+        $.ajax({
+            url: 'User/GetCountry',
+            type: 'Post',
+            data: {},
+            success: function (data) {
+                data = JSON.parse(data);
+                for (var i = 0; i < data.length; i++) {
+                    $("#Country_ddl").append($('<option></option>').html(data[i].CountryName).val(data[i].CountryID));
+                }
+            },
+            erro: function () {
+                alert("Country data not found!");
+            }
+        });
+    }
+
+    function GETSTATE(CountryID) {
+        if (CountryID === '0') {
+            // If the selected Country is 0, disable the State dropdown and clear its options
+            $("#State_ddl").prop('disabled', true).empty().append($('<option></option>').val('0').text('Choose State'));
+            // Disable the City dropdown and clear its options
+            $("#City_ddl").prop('disabled', true).empty().append($('<option></option>').val('0').text('Choose City'));
+        } else {
+            $.ajax({
+                url: 'User/GetState',
+                type: 'Post',
+                data: { CountryID },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    // Enable the State dropdown
+                    $("#State_ddl").prop('disabled', false);
+                    // Clear existing options from the State dropdown
+                    $("#State_ddl").empty().append($('<option></option>').val('0').text('Choose State'));
+                    for (var i = 0; i < data.length; i++) {
+                        $("#State_ddl").append($('<option></option>').html(data[i].StateName).val(data[i].StateID));
+                    }
+                },
+                error: function () {
+                    alert("State data not found!");
+                }
+            });
+        }
+    }
+
+    function GETCITY(StateID) {
+        if (StateID === '0') {
+            // Disable the City dropdown and clear its options
+            $("#City_ddl").prop('disabled', true).empty().append($('<option></option>').val('0').text('Choose City'));
+        } else {
+            $.ajax({
+                url: 'User/GetCity',
+                type: 'Post',
+                data: { StateID },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    // Enable the City dropdown
+                    $("#City_ddl").prop('disabled', false);
+                    // Clear existing options from the State dropdown
+                    $("#City_ddl").empty().append($('<option></option>').val('0').text('Choose City'));
+                    for (var i = 0; i < data.length; i++) {
+                        $("#City_ddl").append($('<option></option>').html(data[i].CityName).val(data[i].CityID));
+                    }
+                },
+                error: function () {
+                    alert("State data not found!");
+                }
+            });
+        }
+    }
+
+    function SAVE() {
+        $.ajax({
+            url: 'User/UserInsert',
+            type: 'Post',
+            data: {
+                Name: $("#Name_txt").val(),
+                Email: $("#Email_txt").val(),
+                Country: $("#Country_ddl").val(),
+                State: $("#State_ddl").val(),
+                City: $("#City_ddl").val()
+            },
+            success: function () {
+                alert("Data has been saved successfully!");
+            },
+            error: function () {
+                alert("Something went wrong!");
+            }
+        });
+    }
+</script>
