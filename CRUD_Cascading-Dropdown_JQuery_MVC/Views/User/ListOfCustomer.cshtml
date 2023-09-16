@@ -14,6 +14,7 @@
         <th>Country</th>
         <th>State</th>
         <th>City</th>
+        <th>Actions</th>
     </tr>
 </table>
 
@@ -40,7 +41,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         GetCustomersList();
-        console.log("called")
+        //console.log("called")
     });
 
     function GetCustomersList() {
@@ -59,6 +60,8 @@
                           <td>${data[i].CountryName}</td>
                           <td>${data[i].StateName}</td>
                           <td>${data[i].CityName}</td>
+                          <td><input id="Edit_btn" type="button" value="Edit" onclick="FetchOne('${data[i].Email}')" style="width:50%" /><input id="Delete_btn" type="button" value="Delete" style="width:50%" /></td>
+                          
                         </tr>
                     `); // Used template literals ( ${} -> Template literal ) for string concatenation
                 }
@@ -67,6 +70,26 @@
                 alert("Data not found!");
             }
         });
+    }
+
+    function FetchOne(CEmail) {
+        window.location.href = '/User/UserFormToEdit?email=' + CEmail;
+
+        //$.ajax({
+        //    url:'FetchOne',
+        //    type: 'post',
+        //    data: { CEmail },
+        //    success: function (data) {
+        //        data = JSON.parse(data)
+        //        if(data != ''){
+        //            console.log("FetchOne has been called!");
+        //            window.location.href = '/User/UserFormToEdit?email='+data;
+        //        }
+        //    },
+        //    error: function(){
+        //        alert("Something went wrong!");
+        //    }
+        //});
     }
 </script>
 

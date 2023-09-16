@@ -57,11 +57,21 @@
         $("#State_ddl").prop('disabled', true);
         // Disable the City dropdown on page load
         $("#City_ddl").prop('disabled', true);
+        if ( true )
+        {
+            $("#Name_txt").val('@Model.Name');
+            $("#Email_txt").val('@Model.Email');
+            $("#Country_txt").val('@Model.Country');
+            GETSTATE('@Model.Country');
+            $("#State_txt").val('@Model.State');
+            GETCITY('@Model.State');
+            $("#City_txt").val('@Model.City');
+        }
     });
 
     function GETCOUNTRY() {
         $.ajax({
-            url: 'User/GetCountry',
+            url: 'GetCountry',
             type: 'Post',
             data: {},
             success: function (data) {
@@ -84,7 +94,7 @@
             $("#City_ddl").prop('disabled', true).empty().append($('<option></option>').val('0').text('Choose City'));
         } else {
             $.ajax({
-                url: 'User/GetState',
+                url: 'GetState',
                 type: 'Post',
                 data: { CountryID },
                 success: function (data) {
@@ -110,7 +120,7 @@
             $("#City_ddl").prop('disabled', true).empty().append($('<option></option>').val('0').text('Choose City'));
         } else {
             $.ajax({
-                url: 'User/GetCity',
+                url: 'GetCity',
                 type: 'Post',
                 data: { StateID },
                 success: function (data) {
@@ -132,7 +142,7 @@
 
     function SAVE() {
         $.ajax({
-            url: 'User/UserInsert',
+            url: 'UserInsert',
             type: 'Post',
             data: {
                 Name: $("#Name_txt").val(),

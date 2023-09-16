@@ -10,8 +10,18 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Models
         public int CustomerID { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public int Country { get; set; }
-        public int State { get; set; }
-        public int City { get; set; }
+        public int? Country { get; set; }
+        public int? State { get; set; }
+        public int? City { get; set; }
+
+        public UserModel() 
+        {
+            CustomerID = 0;
+            Name = string.Empty;
+            Email = string.Empty;
+            Country = null;
+            State = null;
+            City = null;
+        }
     }
 }

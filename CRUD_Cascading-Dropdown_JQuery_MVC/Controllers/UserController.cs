@@ -9,6 +9,7 @@ using System.Web.Helpers;
 using System.Xml.Linq;
 using Newtonsoft.Json;
 using CRUD_Cascading_Dropdown_JQuery_MVC.Models;
+using System.Text;
 
 namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
 {
@@ -23,6 +24,34 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
         public ActionResult UserForm()
         {
             return View();
+        }
+
+        public ActionResult UserFormToEdit(string email)
+        {
+            //string data;
+            UserModel userModel = new UserModel();
+            string sqlQuery = "SELECT * FROM dbo.tblCustomer WHERE [Email] = @email";
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+                cmd.Parameters.AddWithValue("@email", email);
+                //cmd.Parameters.Add("@email", SqlDbType.Int).Value = email;
+                connection.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        userModel.CustomerID = reader.GetInt32(0);
+                        userModel.Name = reader.GetString(1);
+                        userModel.Email = reader.GetString(2);
+                        userModel.Country = reader.GetInt32(3);
+                        userModel.State = reader.GetInt32(4);
+                        userModel.City = reader.GetInt32(5);
+                    }
+                }               
+            }
+            return View("UserForm", userModel);
         }
 
         public ActionResult ListOfCustomer() 
@@ -97,7 +126,6 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
 
         public JsonResult GetCity(int StateID)
         {
-
             string data;
             string sqlQuery = "SELECT * FROM dbo.tblCity WHERE StateID = @stateId";
             using (SqlConnection connection = new SqlConnection(conString))
@@ -112,5 +140,25 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
             }
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+        //public JsonResult FetchOne(string CEmail)
+        //{
+        //    string data;
+        //    //StringBuilder data = new StringBuilder();
+        //    //data = cid;
+        //    //string sqlQuery = "SELECT * FROM dbo.tblCity WHERE [Customer ID] = @cid";
+        //    //using (SqlConnection connection = new SqlConnection(conString))
+        //    //{
+        //    //    SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+        //    //    cmd.Parameters.Add("@cid", SqlDbType.Int).Value = cid;
+        //    //    connection.Open();
+        //    //    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+        //    //    DataTable dt = new DataTable();
+        //    //    adapter.Fill(dt);
+        //        data = JsonConvert.SerializeObject(CEmail);
+        //    //}
+        //    return Json(data, JsonRequestBehavior.AllowGet);
+        //}
+
     }
 }
