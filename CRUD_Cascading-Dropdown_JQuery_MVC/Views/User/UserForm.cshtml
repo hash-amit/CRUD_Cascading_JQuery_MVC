@@ -57,15 +57,25 @@
         $("#State_ddl").prop('disabled', true);
         // Disable the City dropdown on page load
         $("#City_ddl").prop('disabled', true);
-        if ( true )
+        var customerID = @Model.CustomerID;
+        //console.log(customerID);
+        if (customerID > 0)
         {
-            $("#Name_txt").val('@Model.Name');
-            $("#Email_txt").val('@Model.Email');
-            $("#Country_txt").val('@Model.Country');
-            GETSTATE('@Model.Country');
-            $("#State_txt").val('@Model.State');
-            GETCITY('@Model.State');
-            $("#City_txt").val('@Model.City');
+            var name = '@Model.Name';
+            var email = '@Model.Email';
+            var country = @Model.Country;
+            var state = @Model.State;
+            var city = @Model.City;
+            console.log(country);
+            console.log(state);
+            console.log(city);
+            $("#Name_txt").val(name);
+            $("#Email_txt").val(email);
+            $("#Country_txt").val(country);
+            GETSTATE(country);
+            $("#State_txt").val(state);
+            GETCITY(state);
+            $("#City_txt").val(city);
         }
     });
 
@@ -74,6 +84,7 @@
             url: 'GetCountry',
             type: 'Post',
             data: {},
+            async: false,
             success: function (data) {
                 data = JSON.parse(data);
                 for (var i = 0; i < data.length; i++) {
@@ -97,6 +108,7 @@
                 url: 'GetState',
                 type: 'Post',
                 data: { CountryID },
+                async: false,
                 success: function (data) {
                     data = JSON.parse(data);
                     // Enable the State dropdown
@@ -123,6 +135,7 @@
                 url: 'GetCity',
                 type: 'Post',
                 data: { StateID },
+                async: false,
                 success: function (data) {
                     data = JSON.parse(data);
                     // Enable the City dropdown

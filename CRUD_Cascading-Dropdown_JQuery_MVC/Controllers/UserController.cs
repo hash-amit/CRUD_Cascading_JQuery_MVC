@@ -23,7 +23,7 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
 
         public ActionResult UserForm()
         {
-            return View();
+            return View(new UserModel());
         }
 
         public ActionResult UserFormToEdit(string email)
