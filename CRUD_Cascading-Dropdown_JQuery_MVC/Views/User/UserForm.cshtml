@@ -53,29 +53,18 @@
 <script type="text/javascript">
     $(document).ready(function () {
         GETCOUNTRY();
-        // Disable the State dropdown on page load
-        $("#State_ddl").prop('disabled', true);
-        // Disable the City dropdown on page load
-        $("#City_ddl").prop('disabled', true);
-        var customerID = @Model.CustomerID;
-        //console.log(customerID);
-        if (customerID > 0)
+        $("#State_ddl").prop('disabled', true); // Disable the State dropdown on page load
+        $("#City_ddl").prop('disabled', true); // Disable the City dropdown on page load
+
+        if (@Model.CustomerID > 0)
         {
-            var name = '@Model.Name';
-            var email = '@Model.Email';
-            var country = @Model.Country;
-            var state = @Model.State;
-            var city = @Model.City;
-            console.log(country);
-            console.log(state);
-            console.log(city);
-            $("#Name_txt").val(name);
-            $("#Email_txt").val(email);
-            $("#Country_txt").val(country);
-            GETSTATE(country);
-            $("#State_txt").val(state);
-            GETCITY(state);
-            $("#City_txt").val(city);
+            $("#Name_txt").val('@Model.Name');
+            $("#Email_txt").val('@Model.Email');
+            $("#Country_ddl").val(@Model.Country);
+            GETSTATE(@Model.Country);
+            $("#State_ddl").val(@Model.State);
+            GETCITY(@Model.State);
+            $("#City_ddl").val(@Model.City);
         }
     });
 
