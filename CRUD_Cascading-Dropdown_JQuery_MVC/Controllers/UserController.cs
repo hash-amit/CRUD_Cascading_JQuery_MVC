@@ -26,15 +26,15 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
             return View(new UserModel());
         }
 
-        public ActionResult UserFormToEdit(string email)
+        public ActionResult UserFormToEdit(int CID)
         {
             //string data;
             UserModel userModel = new UserModel();
-            string sqlQuery = "SELECT * FROM dbo.tblCustomer WHERE [Email] = @email";
+            string sqlQuery = "SELECT * FROM dbo.tblCustomer WHERE [Customer ID] = @cid";
             using (SqlConnection connection = new SqlConnection(conString))
             {
                 SqlCommand cmd = new SqlCommand(sqlQuery, connection);
-                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@cid", CID);
                 //cmd.Parameters.Add("@email", SqlDbType.Int).Value = email;
                 connection.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
