@@ -109,6 +109,18 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
             }
         }
 
+        public void UserDelete(int CID)
+        {
+            string sqlQuery = "DELETE FROM dbo.tblCustomer WHERE [Customer ID] = @cid";
+            using (SqlConnection connection = new SqlConnection(conString))
+            {
+                SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+                cmd.Parameters.Add("@cid", SqlDbType.Int).Value = CID;
+                connection.Open();
+                _ = cmd.ExecuteNonQuery();
+            }
+        }
+
         public JsonResult GetCountry()
         {
             string data;

@@ -60,7 +60,7 @@
                           <td>${data[i].CountryName}</td>
                           <td>${data[i].StateName}</td>
                           <td>${data[i].CityName}</td>
-                          <td><input id="Edit_btn" type="button" value="Edit" onclick="FetchOne('${data[i]['Customer ID']}')" style="width:50%" /><input id="Delete_btn" type="button" value="Delete" style="width:50%" /></td>
+                          <td><input id="Edit_btn" type="button" value="Edit" onclick="FetchOne('${data[i]['Customer ID']}')" style="width:50%" /><input id="Delete_btn" type="button" value="Delete" onclick="DELETE('${data[i]['Customer ID']}','${data[i].Name}')" style="width:50%" /></td>
 
                         </tr>
                     `); // Used template literals ( ${} -> Template literal ) for string concatenation
@@ -74,6 +74,24 @@
 
     function FetchOne(CID) {
         window.location.href = '/User/UserFormToEdit?CID=' + CID;
+    }
+
+    function DELETE(CID, CName) {
+        var CustomerName = CName;
+        if (confirm("Are you sure you want to remove " + CustomerName + "?")) {
+            $.ajax({
+                url: 'UserDelete',
+                type: 'Post',
+                data: { CID },
+                success: function () {
+                    alert(CustomerName + " has been removed permanently");
+                    GetCustomersList()
+                },
+                error: function () {
+                    alert("Something went wrong!");
+                }
+            });
+        }
     }
 </script>
 
