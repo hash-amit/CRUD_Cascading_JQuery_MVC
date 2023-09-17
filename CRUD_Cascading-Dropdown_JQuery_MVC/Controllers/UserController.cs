@@ -49,13 +49,13 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
                         userModel.State = reader.GetInt32(4);
                         userModel.City = reader.GetInt32(5);
                     }
-                }               
+                }
             }
             return View("UserForm", userModel);
         }
 
-        public ActionResult ListOfCustomer() 
-        { 
+        public ActionResult ListOfCustomer()
+        {
             return View();
         }
 
@@ -71,22 +71,41 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
                 _ = adapter.Fill(dataTable);
             }
             string data = JsonConvert.SerializeObject(dataTable);
-            return Json(data,JsonRequestBehavior.AllowGet);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public void UserInsert(UserModel userModel)
+        public void UserInsertUpdate(UserModel userModel)
         {
-            string sqlQuery = "INSERT INTO tblCustomer VALUES (@name,@email,@country,@state,@city)";
-            using (SqlConnection connection = new SqlConnection(conString))
+            if (userModel.CustomerID > 0)
             {
-                SqlCommand cmd = new SqlCommand(sqlQuery, connection);
-                cmd.Parameters.Add("@name", SqlDbType.VarChar, 60).Value = userModel.Name;
-                cmd.Parameters.Add("@email", SqlDbType.VarChar, 60).Value = userModel.Email;
-                cmd.Parameters.Add("@country", SqlDbType.Int).Value = userModel.Country;
-                cmd.Parameters.Add("@state", SqlDbType.Int).Value = userModel.State;
-                cmd.Parameters.Add("@city", SqlDbType.Int).Value = userModel.City;
-                connection.Open();
-                _ = cmd.ExecuteNonQuery();
+                string sqlQuery = "UPDATE tblCustomer SET [Name] = @name, [Email] = @email, [Country] = @country, [State] = @state, [City] = @city WHERE [Customer ID] = @cid";
+                using (SqlConnection connection = new SqlConnection(conString))
+                {
+                    SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+                    cmd.Parameters.Add("@name", SqlDbType.VarChar, 60).Value = userModel.Name;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar, 60).Value = userModel.Email;
+                    cmd.Parameters.Add("@country", SqlDbType.Int).Value = userModel.Country;
+                    cmd.Parameters.Add("@state", SqlDbType.Int).Value = userModel.State;
+                    cmd.Parameters.Add("@city", SqlDbType.Int).Value = userModel.City;
+                    cmd.Parameters.Add("@cid", SqlDbType.Int).Value = userModel.CustomerID;
+                    connection.Open();
+                    _ = cmd.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                string sqlQuery = "INSERT INTO tblCustomer VALUES (@name,@email,@country,@state,@city)";
+                using (SqlConnection connection = new SqlConnection(conString))
+                {
+                    SqlCommand cmd = new SqlCommand(sqlQuery, connection);
+                    cmd.Parameters.Add("@name", SqlDbType.VarChar, 60).Value = userModel.Name;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar, 60).Value = userModel.Email;
+                    cmd.Parameters.Add("@country", SqlDbType.Int).Value = userModel.Country;
+                    cmd.Parameters.Add("@state", SqlDbType.Int).Value = userModel.State;
+                    cmd.Parameters.Add("@city", SqlDbType.Int).Value = userModel.City;
+                    connection.Open();
+                    _ = cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -103,12 +122,12 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
                 adapter.Fill(dt);
                 data = JsonConvert.SerializeObject(dt);
             }
-            return Json(data,JsonRequestBehavior.AllowGet);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetState(int CountryID)
         {
-            
+
             string data;
             string sqlQuery = "SELECT * FROM dbo.tblState WHERE CountryID = @countryId";
             using (SqlConnection connection = new SqlConnection(conString))
@@ -140,25 +159,5 @@ namespace CRUD_Cascading_Dropdown_JQuery_MVC.Controllers
             }
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-        //public JsonResult FetchOne(string CEmail)
-        //{
-        //    string data;
-        //    //StringBuilder data = new StringBuilder();
-        //    //data = cid;
-        //    //string sqlQuery = "SELECT * FROM dbo.tblCity WHERE [Customer ID] = @cid";
-        //    //using (SqlConnection connection = new SqlConnection(conString))
-        //    //{
-        //    //    SqlCommand cmd = new SqlCommand(sqlQuery, connection);
-        //    //    cmd.Parameters.Add("@cid", SqlDbType.Int).Value = cid;
-        //    //    connection.Open();
-        //    //    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-        //    //    DataTable dt = new DataTable();
-        //    //    adapter.Fill(dt);
-        //        data = JsonConvert.SerializeObject(CEmail);
-        //    //}
-        //    return Json(data, JsonRequestBehavior.AllowGet);
-        //}
-
     }
 }
